@@ -19,7 +19,7 @@ function Home() {
   return (
     <div style={containerStyle}>
       <h1 style={headingStyle}>Em desenvolvimento!</h1>
-      <p>Novidades em breve!</p>
+      <p>Novidades em breve!!</p>
     </div>
   );
 }
