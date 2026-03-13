@@ -19,6 +19,7 @@ describe("POST /api/v1/users", () => {
           username: "viniciusborille",
           email: "vinibor@email.com",
           password: "senha123",
+          role: "gestor",
         }),
       });
 
@@ -30,6 +31,7 @@ describe("POST /api/v1/users", () => {
         username: "viniciusborille",
         email: "vinibor@email.com",
         password: "senha123",
+        role: "gestor",
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -49,6 +51,7 @@ describe("POST /api/v1/users", () => {
           username: "viniciusduplicado1",
           email: "vinibor@vinidup.com",
           password: "senha123",
+          role: "gestor",
         }),
       });
 
@@ -63,6 +66,7 @@ describe("POST /api/v1/users", () => {
           username: "viniciusduplicado",
           email: "Vinibor@vinidup.com",
           password: "senha123",
+          role: "gestor",
         }),
       });
 
@@ -87,6 +91,7 @@ describe("POST /api/v1/users", () => {
           username: "viniciussilva",
           email: "vinisil@email.com",
           password: "senha123",
+          role: "gestor",
         }),
       });
 
@@ -101,6 +106,7 @@ describe("POST /api/v1/users", () => {
           username: "Viniciussilva",
           email: "vinisil2@email.com",
           password: "senha123",
+          role: "gestor",
         }),
       });
 
@@ -112,6 +118,30 @@ describe("POST /api/v1/users", () => {
         name: "ValidationError",
         message: "O username informado já está sendo utilizado.",
         action: "Utilize outro username para realizar o cadastro.",
+        status_code: 400,
+      });
+    });
+    test("With not allowed role", async () => {
+      const response = await fetch("http:localhost:3000/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: "viniciiiusborille",
+          email: "viniborii@email.com",
+          password: "senha123",
+          role: "gestao",
+        }),
+      });
+
+      expect(response.status).toBe(400);
+
+      const responseBody = await response.json();
+      expect(responseBody).toEqual({
+        name: "ValidationError",
+        message: "O role informado não é permitido.",
+        action: "Utilize outro role para realizar o cadastro.",
         status_code: 400,
       });
     });

@@ -35,6 +35,7 @@ async function findOneByUsername(username) {
 async function create(userInputValues) {
   await validateUniqueEmail(userInputValues.email);
   await validateUniqueUsername(userInputValues.username);
+  await validateUserRole(userInputValues.role);
 
   const newUser = await runInsertQuery(userInputValues);
   return newUser;
@@ -72,7 +73,6 @@ async function create(userInputValues) {
     ;`,
       values: [username],
     });
-
     if (results.rowCount > 0) {
       throw new ValidationError({
         message: "O username informado já está sendo utilizado.",
@@ -81,13 +81,27 @@ async function create(userInputValues) {
     }
   }
 
+  async function validateUserRole(role) {
+    if (
+      role != "gestor" &&
+      role != "financeiro" &&
+      role != "tecnico" &&
+      role != "atendente"
+    ) {
+      throw new ValidationError({
+        message: "O role informado não é permitido.",
+        action: "Utilize outro role para realizar o cadastro.",
+      });
+    }
+  }
+
   async function runInsertQuery(userInputValues) {
     const results = await database.query({
       text: `
     INSERT INTO 
-      users (username, email, password) 
+      users (username, email, password, role) 
     VALUES 
-      ($1, $2, $3)
+      ($1, $2, $3, $4)
     RETURNING
       *
     ;`,
@@ -95,6 +109,7 @@ async function create(userInputValues) {
         userInputValues.username,
         userInputValues.email,
         userInputValues.password,
+        userInputValues.role,
       ],
     });
 
