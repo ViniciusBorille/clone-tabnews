@@ -63,26 +63,6 @@ async function create(userInputValues) {
     }
   }
 
-  async function validateUniqueUsername(username) {
-    const results = await database.query({
-      text: `
-      SELECT
-        username
-      FROM
-        users
-      WHERE
-        LOWER(username) = LOWER($1)
-    ;`,
-      values: [username],
-    });
-    if (results.rowCount > 0) {
-      throw new ValidationError({
-        message: "O username informado já está sendo utilizado.",
-        action: "Utilize outro username para realizar o cadastro.",
-      });
-    }
-  }
-
   async function validateUserRole(role) {
     if (
       role != "gestor" &&
@@ -124,9 +104,39 @@ async function create(userInputValues) {
   }
 }
 
+async function update(username, userInputValues) {
+  const currentUser = await findOneByUsername(username);
+
+  if("username" in userInputValues) {
+    await validateUniqueUsername(userInputValues.username)
+  }
+}
+
+  async function validateUniqueUsername(username) {
+    const results = await database.query({
+      text: `
+      SELECT
+        username
+      FROM
+        users
+      WHERE
+        LOWER(username) = LOWER($1)
+    ;`,
+      values: [username],
+    });
+    if (results.rowCount > 0) {
+      throw new ValidationError({
+        message: "O username informado já está sendo utilizado.",
+        action: "Utilize outro username para realizar o cadastro.",
+      });
+    }
+  }
+
+
 const user = {
   create,
   findOneByUsername,
+  update,
 };
 
 export default user;
