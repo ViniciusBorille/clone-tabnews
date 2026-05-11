@@ -74,18 +74,18 @@ async function injectAuthenticatedUser(request) {
   const userObject = await user.findOneById(sessionObject.user_id);
 
   request.context = {
-    ...request.context,
+    ...(request.context || {}),
     user: userObject,
   };
 }
 
 function injectAnonymousUser(request) {
   const anonymousUserObject = {
-    features: ["create:session"],
+    features: ["create:session", "read:activation_token"],
   };
 
   request.context = {
-    ...request.context,
+    ...(request.context || {}),
     user: anonymousUserObject,
   };
 }

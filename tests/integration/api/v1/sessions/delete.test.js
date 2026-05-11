@@ -46,17 +46,12 @@ describe("GET /api/v1/session", () => {
       });
     });
     test("With expired session", async () => {
-      jest.useFakeTimers({
-        now: new Date(Date.now() - session.EXPIRATION_IN_MILISECONDS),
-      });
-
       const createdUser = await orchestrator.createUser({
         username: "UserWithExpiredSession",
       });
 
       const sessionObject = await orchestrator.createSession(createdUser.id);
-
-      jest.useRealTimers();
+      await session.expireById(sessionObject.id);
 
       const response = await fetch("http://localhost:3000/api/v1/sessions", {
         method: "DELETE",
