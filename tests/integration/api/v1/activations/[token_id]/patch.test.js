@@ -2,7 +2,6 @@ import { version as uuidVersion } from "uuid";
 import user from "models/user.js";
 import orchestrator from "tests/orchestrator";
 import activation from "models/activation.js";
-import { describe } from "node:test";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
