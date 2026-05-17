@@ -1,4 +1,4 @@
-import { InternalServerError } from "infra/errors";
+import { InternalServerError } from "@/infra/errors";
 
 const availableFeatures = [
   // USER

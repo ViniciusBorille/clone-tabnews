@@ -1,7 +1,7 @@
 import * as cookie from "cookie";
-import session from "models/session.js";
-import user from "models/user";
-import authorization from "models/authorization.js";
+import session from "@/models/session.js";
+import user from "@/models/user";
+import authorization from "@/models/authorization.js";
 
 import {
   InternalServerError,
@@ -10,7 +10,7 @@ import {
   NotFoundError,
   UnauthorizedError,
   ForbiddenError,
-} from "infra/errors";
+} from "@/infra/errors";
 
 function onNoMatchHandler(request, response) {
   const publicErrorObject = new MethodNotAllowedError();
