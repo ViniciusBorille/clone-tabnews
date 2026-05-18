@@ -1,5 +1,5 @@
 import { version as uuidVersion } from "uuid";
-import orchestrator from "tests/orchestrator.js";
+import orchestrator from "@/tests/orchestrator.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -12,8 +12,6 @@ describe("GET /api/v1/users/[username]", () => {
     test("With exact case match", async () => {
       await orchestrator.createUser({
         username: "MesmoCase",
-        email: "mesmocase@email.com",
-        password: "senha123",
         role: "gestor",
       });
 
@@ -28,8 +26,7 @@ describe("GET /api/v1/users/[username]", () => {
       expect(response2Body).toEqual({
         id: response2Body.id,
         username: "MesmoCase",
-        email: "mesmocase@email.com",
-        password: response2Body.password,
+        features: ["read:activation_token"],
         role: "gestor",
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,
@@ -58,8 +55,7 @@ describe("GET /api/v1/users/[username]", () => {
       expect(response2Body).toEqual({
         id: response2Body.id,
         username: "CaseDiferente",
-        email: "case.diferente@email.com",
-        password: response2Body.password,
+        features: ["read:activation_token"],
         role: "gestor",
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,

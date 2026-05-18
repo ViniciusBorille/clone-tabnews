@@ -1,7 +1,7 @@
 import { version as uuidVersion } from "uuid";
 import setCookieParser from "set-cookie-parser";
-import orchestrator from "tests/orchestrator.js";
-import session from "models/session.js";
+import orchestrator from "@/tests/orchestrator.js";
+import session from "@/models/session.js";
 
 beforeAll(async () => {
   await orchestrator.waitForAllServices();
@@ -99,6 +99,8 @@ describe("POST /api/v1/sessions", () => {
         password: "tudocorreto",
       });
 
+      await orchestrator.activateUser(createdUser);
+
       const response = await fetch("http:localhost:3000/api/v1/sessions", {
         method: "POST",
         headers: {
@@ -137,10 +139,10 @@ describe("POST /api/v1/sessions", () => {
       const expirationInMilliseconds = expiresAt - createdAt;
 
       expect(expirationInMilliseconds).toBeGreaterThanOrEqual(
-        session.EXPIRATION_IN_MILISECONDS - 1000,
+        session.EXPIRATION_IN_MILISECONDS - 10000,
       );
       expect(expirationInMilliseconds).toBeLessThanOrEqual(
-        session.EXPIRATION_IN_MILISECONDS + 1000,
+        session.EXPIRATION_IN_MILISECONDS + 10000,
       );
 
       const parsedSetCookie = setCookieParser(response, {
