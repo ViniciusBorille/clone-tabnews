@@ -71,12 +71,10 @@ describe("PATCH /api/v1/users/[username]", () => {
     test("With duplicated 'username'", async () => {
       await orchestrator.createUser({
         username: "user1",
-        role: "gestor",
       });
 
       const createdUser2 = await orchestrator.createUser({
         username: "user2",
-        role: "gestor",
       });
 
       const activatedUser2 = await orchestrator.activateUser(createdUser2);
@@ -107,12 +105,10 @@ describe("PATCH /api/v1/users/[username]", () => {
     test("With `userB` targeting `userA`", async () => {
       await orchestrator.createUser({
         username: "userA",
-        role: "gestor",
       });
 
       const createdUserB = await orchestrator.createUser({
         username: "userB",
-        role: "gestor",
       });
 
       const activatedUserB = await orchestrator.activateUser(createdUserB);
@@ -205,7 +201,6 @@ describe("PATCH /api/v1/users/[username]", () => {
         id: responseBody.id,
         username: "uniqueUser2",
         features: ["create:session", "read:session", "update:user"],
-        role: createdUser.role,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -243,7 +238,6 @@ describe("PATCH /api/v1/users/[username]", () => {
         id: responseBody.id,
         username: createdUser.username,
         features: ["create:session", "read:session", "update:user"],
-        role: createdUser.role,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -285,7 +279,6 @@ describe("PATCH /api/v1/users/[username]", () => {
         id: responseBody.id,
         username: createdUser.username,
         features: ["create:session", "read:session", "update:user"],
-        role: createdUser.role,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });
@@ -309,36 +302,6 @@ describe("PATCH /api/v1/users/[username]", () => {
 
       expect(correctPasswordAMatch).toBe(true);
       expect(incorrectPasswordAMatch).toBe(false);
-    });
-    test("With not allowed role", async () => {
-      const createdUser = await orchestrator.createUser();
-      const activatedUser = await orchestrator.activateUser(createdUser);
-      const sessionObject = await orchestrator.createSession(activatedUser);
-
-      const response = await fetch(
-        `http:localhost:3000/api/v1/users/${createdUser.username}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Cookie: `session_id=${sessionObject.token}`,
-          },
-          body: JSON.stringify({
-            role: "Gestor",
-          }),
-        },
-      );
-
-      expect(response.status).toBe(400);
-
-      const responseBody = await response.json();
-
-      expect(responseBody).toEqual({
-        name: "ValidationError",
-        message: "O role informado não é permitido.",
-        action: "Utilize outro role para realizar o cadastro.",
-        status_code: 400,
-      });
     });
   });
   describe("Privileged user", () => {
@@ -379,7 +342,6 @@ describe("PATCH /api/v1/users/[username]", () => {
         id: defaultUser.id,
         username: "alteradoPorPrivilegiado",
         features: defaultUser.features,
-        role: defaultUser.role,
         created_at: responseBody.created_at,
         updated_at: responseBody.updated_at,
       });

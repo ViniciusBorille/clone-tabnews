@@ -24,7 +24,6 @@ describe("Use case: Registration Flow (all successful", () => {
         username: "RegistrationFlow",
         email: "registration.flow@curso.dev",
         password: "registration",
-        role: "atendente",
       }),
     });
     expect(createUserResponse.status).toBe(201);
@@ -37,7 +36,6 @@ describe("Use case: Registration Flow (all successful", () => {
       email: createUserResponseBody.email,
       features: ["read:activation_token"],
       password: createUserResponseBody.password,
-      role: createUserResponseBody.role,
       created_at: createUserResponseBody.created_at,
       updated_at: createUserResponseBody.updated_at,
     });
