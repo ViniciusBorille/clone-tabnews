@@ -7,7 +7,7 @@ function getOrigin() {
     return `https://${process.env.VERCEL_URL}`;
   }
 
-  return "https://agrdrive.com.br";
+  return "https://clone-tabnews.com.br";
 }
 
 const webserver = {
